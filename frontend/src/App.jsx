@@ -1,6 +1,8 @@
 import { useState } from "react";
 import "./App.css";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 function App() {
   const [url, setUrl] = useState("");
   const [shortUrl, setShortUrl] = useState("");
@@ -12,7 +14,7 @@ function App() {
 
     try {
       const response = await fetch(
-        "http://127.0.0.1:8000/urls",
+        `${API_URL}/urls`,
         {
           method: "POST",
           headers: {
