@@ -1,0 +1,53 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #0f172a;
+  color: white;
+}
+
+.container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+h1 {
+  margin-bottom: 30px;
+  font-size: 3rem;
+}
+
+input {
+  width: 400px;
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  margin-bottom: 15px;
+}
+
+button {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.result {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.result a {
+  color: #60a5fa;
+  font-size: 18px;
+}
+
+.copy-btn {
+  margin-top: 10px;
+}
+
+.error {
+  color: #ef4444;
+  margin-top: 10px;
+}
