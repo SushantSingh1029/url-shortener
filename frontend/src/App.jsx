@@ -1,96 +1,29 @@
-import { useState } from "react";
-import "./App.css";
+import { Routes, Route, Navigate } from "react-router-dom";
 
-const API_URL = import.meta.env.VITE_API_URL;
+import Login from "./pages/Login";
 
 function App() {
-  const [url, setUrl] = useState("");
-  const [shortUrl, setShortUrl] = useState("");
-  const [error, setError] = useState("");
 
-  const handleSubmit = async () => {
-    setError("");
-    setShortUrl("");
-
-    try {
-      const response = await fetch(
-        `${API_URL}/urls`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            original_url: url,
-          }),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Invalid URL");
-      }
-
-      const data = await response.json();
-
-      setShortUrl(data.short_url);
-    } catch (err) {
-      setError("Please enter a valid URL.");
-    }
-  };
-
-  const copyToClipboard = async () => {
-    try {
-      await navigator.clipboard.writeText(shortUrl);
-      alert("Copied to clipboard!");
-    } catch (err) {
-      console.error(err);
-    }
-  };
+  const token = localStorage.getItem("token");
 
   return (
-    <div className="container">
-      <h1>URL Shortener</h1>
+    <Routes>
 
-      <input
-        type="text"
-        placeholder="Enter URL (https://example.com)"
-        value={url}
-        onChange={(e) => setUrl(e.target.value)}
+      <Route
+        path="/login"
+        element={<Login />}
       />
 
-      <button onClick={handleSubmit}>
-        Shorten URL
-      </button>
+      <Route
+        path="/"
+        element={
+          token
+            ? <Navigate to="/dashboard" />
+            : <Navigate to="/login" />
+        }
+      />
 
-      {error && (
-        <p className="error">
-          {error}
-        </p>
-      )}
-
-      {shortUrl && (
-        <div className="result">
-          <h3>Short URL</h3>
-
-          <a
-            href={shortUrl}
-            target="_blank"
-            rel="noreferrer"
-          >
-            {shortUrl}
-          </a>
-
-          <br />
-
-          <button
-            className="copy-btn"
-            onClick={copyToClipboard}
-          >
-            Copy
-          </button>
-        </div>
-      )}
-    </div>
+    </Routes>
   );
 }
 
