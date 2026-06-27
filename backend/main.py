@@ -3,12 +3,24 @@ from fastapi.responses import RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 
+from dotenv import load_dotenv
+import os
+
 from database import Base, engine, get_db
 from models import URL
 from schemas import URLCreate
 from utils import generate_short_code
 
+# -------------------------------
+# Load Environment Variables
+# -------------------------------
+load_dotenv()
+
+BASE_URL = os.getenv("BASE_URL")
+
+# -------------------------------
 # Create database tables
+# -------------------------------
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
@@ -43,7 +55,7 @@ def create_url(
     db.refresh(new_url)
 
     return {
-        "short_url": f"http://127.0.0.1:8000/{new_url.short_code}"
+        "short_url": f"{BASE_URL}/{new_url.short_code}"
     }
 
 
@@ -60,6 +72,4 @@ def redirect_to_url(
     if not url:
         return {"error": "Short URL not found"}
 
-    return RedirectResponse(
-        url=url.original_url
-    )
+    return RedirectResponse(url=url.original_url)
