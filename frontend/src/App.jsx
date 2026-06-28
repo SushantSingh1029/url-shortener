@@ -1,29 +1,43 @@
-import { Routes, Route, Navigate } from "react-router-dom";
-
+import { Routes, Route } from "react-router-dom";
+import { AuthProvider } from "./context/AuthContext";
+import ProtectedRoute from "./components/ProtectedRoute";
+import Navbar from "./components/Navbar";
+import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
+import Register from "./pages/Register";
+import UrlManagement from "./pages/UrlManagement";
 
 function App() {
-
-  const token = localStorage.getItem("token");
-
   return (
-    <Routes>
+    <AuthProvider>
+      <div className="min-h-screen bg-gray-50">
+        <Navbar />
 
-      <Route
-        path="/login"
-        element={<Login />}
-      />
+        <Routes>
+          <Route path="/login" element={<Login />} />
 
-      <Route
-        path="/"
-        element={
-          token
-            ? <Navigate to="/dashboard" />
-            : <Navigate to="/login" />
-        }
-      />
+          <Route path="/register" element={<Register />} />
 
-    </Routes>
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/urls"
+            element={
+              <ProtectedRoute>
+                <UrlManagement />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      </div>
+    </AuthProvider>
   );
 }
 
