@@ -13,14 +13,27 @@ from app.utils.token import create_access_token, create_refresh_token, decode_to
 from app.dependencies import get_current_user, get_current_token
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
-
 @router.post("/register", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
 def register(user_in: UserCreate, db: Session = Depends(get_db)):
     user = register_user(db, user_in)
-    token = create_verification_token(db, user.id)
-    send_email(user.email, "Verify your account", f"Your verification token is: {token}")
-    return user
 
+    token = create_verification_token(db, user.id)
+
+    try:
+        send_email(
+            user.email,
+            "Verify your account",
+            f"Your verification token is: {token}"
+        )
+        print("Verification email sent successfully.")
+
+    except Exception as e:
+        print("===================================")
+        print("EMAIL SENDING FAILED")
+        print(e)
+        print("===================================")
+
+    return user
 @router.get("/verify-email/{token}")
 def verify(token: str, db: Session = Depends(get_db)):
     if verify_email(db, token):
